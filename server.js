@@ -6,6 +6,7 @@ const db = require('./db');
 const {Product} = db.models
 
 app.use('/dist', express.static(path.join(__dirname, 'dist')))
+app.use(require('body-parser').json())
 
 app.get('/', (req, res, next) => {
   res.sendFile(path.join(__dirname, 'index.html'))
@@ -14,6 +15,12 @@ app.get('/', (req, res, next) => {
 app.get('/api/products', (req, res, next) => {
   Product.findAll()
     .then( products => res.send(products))
+    .catch(next)
+})
+
+app.post('/api/products', (req, res, next) => {
+  Product.create(req.body)
+    .then( product => res.send(product))
     .catch(next)
 })
 
