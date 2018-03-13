@@ -20434,8 +20434,7 @@ var Main = function (_React$Component) {
     var _this = _possibleConstructorReturn(this, (Main.__proto__ || Object.getPrototypeOf(Main)).call(this));
 
     _this.state = {
-      products: [],
-      product: {}
+      products: []
     };
     _this.onCreate = _this.onCreate.bind(_this);
     _this.onSelect = _this.onSelect.bind(_this);
@@ -20512,9 +20511,7 @@ var Main = function (_React$Component) {
   }, {
     key: 'render',
     value: function render() {
-      var _state = this.state,
-          products = _state.products,
-          product = _state.product;
+      var products = this.state.products;
       var onChange = this.onChange,
           onCreate = this.onCreate,
           onSelect = this.onSelect,
@@ -20529,12 +20526,20 @@ var Main = function (_React$Component) {
           null,
           _react2.default.createElement(_reactRouterDom.Route, { component: _Nav2.default }),
           _react2.default.createElement(_reactRouterDom.Route, { path: '/', exact: true, component: _Home2.default }),
-          _react2.default.createElement(_reactRouterDom.Route, { path: '/products', exact: true, component: function component() {
-              return _react2.default.createElement(_Products2.default, { products: products, onCreate: onCreate, select: onSelect });
+          _react2.default.createElement(_reactRouterDom.Route, { path: '/products', exact: true, render: function render() {
+              return _react2.default.createElement(_Products2.default, {
+                products: products,
+                onCreate: onCreate,
+                select: onSelect
+              });
             } }),
-          _react2.default.createElement(_reactRouterDom.Route, { path: '/products/:id', exact: true, component: function component(_ref) {
+          _react2.default.createElement(_reactRouterDom.Route, { path: '/products/:id', exact: true, render: function render(_ref) {
               var match = _ref.match;
-              return _react2.default.createElement(_Product2.default, { product: product, update: onUpdate, 'delete': onDelete, id: match.params.id });
+              return _react2.default.createElement(_Product2.default, {
+                products: products,
+                update: onUpdate,
+                'delete': onDelete,
+                id: match.params.id });
             } })
         )
       );
@@ -25218,7 +25223,7 @@ var Products = function (_React$Component) {
     var _this = _possibleConstructorReturn(this, (Products.__proto__ || Object.getPrototypeOf(Products)).call(this));
 
     _this.state = {
-      inputValue: ''
+      name: ''
     };
     _this.onAddProduct = _this.onAddProduct.bind(_this);
     _this.onChange = _this.onChange.bind(_this);
@@ -25228,17 +25233,17 @@ var Products = function (_React$Component) {
   _createClass(Products, [{
     key: 'onChange',
     value: function onChange(ev) {
-      var inputValue = ev.target.value;
-      this.setState({ inputValue: inputValue });
+      var name = ev.target.value;
+      this.setState({ name: name });
     }
   }, {
     key: 'onAddProduct',
     value: function onAddProduct(ev) {
       ev.preventDefault();
-      var inputValue = this.state.inputValue;
+      var name = this.state.name;
       var onCreate = this.props.onCreate;
 
-      onCreate(inputValue);
+      onCreate(name);
     }
   }, {
     key: 'render',
@@ -25330,14 +25335,13 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var Product = function (_React$Component) {
   _inherits(Product, _React$Component);
 
-  function Product(props) {
+  function Product() {
     _classCallCheck(this, Product);
 
-    var _this = _possibleConstructorReturn(this, (Product.__proto__ || Object.getPrototypeOf(Product)).call(this, props));
+    var _this = _possibleConstructorReturn(this, (Product.__proto__ || Object.getPrototypeOf(Product)).call(this));
 
     _this.state = {
-      inputValue: props.product.name,
-      product: {}
+      name: ''
     };
     _this.onChange = _this.onChange.bind(_this);
     _this.onSave = _this.onSave.bind(_this);
@@ -25348,27 +25352,35 @@ var Product = function (_React$Component) {
   _createClass(Product, [{
     key: 'componentDidMount',
     value: function componentDidMount() {
-      console.log('mounted');
+      var _this2 = this;
+
+      var product = this.props.products.find(function (p) {
+        return p.id === _this2.props.id * 1;
+      });
+      product ? this.setState({ name: product.name }) : null;
     }
   }, {
     key: 'componentWillReceiveProps',
     value: function componentWillReceiveProps(nextProps) {
-      console.log('next');
+      var product = nextProps.products.find(function (p) {
+        return p.id === nextProps.id * 1;
+      });
+      product ? this.setState({ name: product.name }) : null;
     }
   }, {
     key: 'onChange',
     value: function onChange(ev) {
-      var inputValue = ev.target.value;
-      this.setState({ inputValue: inputValue });
+      var name = ev.target.value;
+      this.setState({ name: name });
     }
   }, {
     key: 'onSave',
     value: function onSave(ev) {
       ev.preventDefault();
-      var inputValue = this.state.inputValue;
+      var name = this.state.name;
       var id = this.props.id;
 
-      this.props.update({ id: id, name: inputValue });
+      this.props.update({ id: id, name: name });
     }
   }, {
     key: 'onDelete',
@@ -25382,11 +25394,10 @@ var Product = function (_React$Component) {
   }, {
     key: 'render',
     value: function render() {
-      var product = this.props.product;
       var onChange = this.onChange,
           onSave = this.onSave,
           onDelete = this.onDelete;
-      var inputValue = this.state.inputValue;
+      var name = this.state.name;
 
       return _react2.default.createElement(
         'div',
@@ -25394,7 +25405,7 @@ var Product = function (_React$Component) {
         _react2.default.createElement(
           'form',
           null,
-          _react2.default.createElement('input', { value: inputValue, onChange: onChange }),
+          _react2.default.createElement('input', { value: name, onChange: onChange }),
           _react2.default.createElement(
             'button',
             { onClick: onSave },

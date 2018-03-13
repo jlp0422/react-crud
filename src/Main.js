@@ -13,7 +13,6 @@ export default class Main extends React.Component {
     super()
     this.state = {
       products: [],
-      product: {},
     }
     this.onCreate = this.onCreate.bind(this)
     this.onSelect = this.onSelect.bind(this)
@@ -60,15 +59,31 @@ export default class Main extends React.Component {
   }
 
   render() {
-    const { products, product } = this.state
+    const { products } = this.state
     const { onChange, onCreate, onSelect, onUpdate, onDelete } = this
     return (
       <Router>
         <div>
           <Route component={Nav} />
+
           <Route path='/' exact component={Home} />
-          <Route path='/products' exact component={() => (<Products products={ products } onCreate={ onCreate } select={ onSelect } />)} />
-          <Route path='/products/:id' exact component={({ match }) => (<Product product={ product } update={ onUpdate } delete={ onDelete } id={ match.params.id }/>)} />
+
+          <Route path='/products' exact render={() => (
+            <Products
+              products={ products }
+              onCreate={ onCreate }
+              select={ onSelect }
+            />
+          )} />
+
+          <Route path='/products/:id' exact render={({ match }) => (
+            <Product
+              products={ products }
+              update={ onUpdate }
+              delete={ onDelete }
+              id={ match.params.id }/>
+          )} />
+
         </div>
       </Router>
     )

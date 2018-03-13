@@ -7,22 +7,22 @@ export default class Products extends React.Component {
   constructor() {
     super()
     this.state = {
-      inputValue: ''
+      name: ''
     }
     this.onAddProduct = this.onAddProduct.bind(this)
     this.onChange = this.onChange.bind(this)
   }
 
   onChange(ev) {
-    const inputValue = ev.target.value
-    this.setState({ inputValue })
+    const name = ev.target.value
+    this.setState({ name })
   }
 
   onAddProduct(ev) {
     ev.preventDefault()
-    const { inputValue } = this.state
+    const { name } = this.state
     const { onCreate } = this.props
-    onCreate(inputValue)
+    onCreate(name)
   }
 
   render() {
