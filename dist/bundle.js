@@ -20386,6 +20386,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
@@ -20396,6 +20398,10 @@ var _axios = __webpack_require__(37);
 
 var _axios2 = _interopRequireDefault(_axios);
 
+var _Nav = __webpack_require__(104);
+
+var _Nav2 = _interopRequireDefault(_Nav);
+
 var _Home = __webpack_require__(102);
 
 var _Home2 = _interopRequireDefault(_Home);
@@ -20404,26 +20410,88 @@ var _Products = __webpack_require__(103);
 
 var _Products2 = _interopRequireDefault(_Products);
 
-var _Nav = __webpack_require__(104);
+var _Product = __webpack_require__(105);
 
-var _Nav2 = _interopRequireDefault(_Nav);
+var _Product2 = _interopRequireDefault(_Product);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/* eslint-disable */
-var Main = function Main() {
-  return _react2.default.createElement(
-    _reactRouterDom.HashRouter,
-    null,
-    _react2.default.createElement(
-      'div',
-      null,
-      _react2.default.createElement(_reactRouterDom.Route, { component: _Nav2.default }),
-      _react2.default.createElement(_reactRouterDom.Route, { path: '/', exact: true, component: _Home2.default }),
-      _react2.default.createElement(_reactRouterDom.Route, { path: '/products', exact: true, component: _Products2.default })
-    )
-  );
-};
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /* eslint-disable */
+
+
+var Main = function (_React$Component) {
+  _inherits(Main, _React$Component);
+
+  function Main() {
+    _classCallCheck(this, Main);
+
+    var _this = _possibleConstructorReturn(this, (Main.__proto__ || Object.getPrototypeOf(Main)).call(this));
+
+    _this.state = {
+      products: [],
+      product: {}
+    };
+    _this.onCreate = _this.onCreate.bind(_this);
+    return _this;
+  }
+
+  _createClass(Main, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      var _this2 = this;
+
+      _axios2.default.get('/api/products').then(function (res) {
+        return res.data;
+      }).then(function (products) {
+        return _this2.setState({ products: products });
+      });
+    }
+  }, {
+    key: 'onCreate',
+    value: function onCreate(product) {
+      var _this3 = this;
+
+      _axios2.default.post('/api/products', { name: product }).then(function (res) {
+        return res.data;
+      }).then(function (product) {
+        return _this3.setState({ products: [].concat(_toConsumableArray(_this3.state.products), [product]) });
+      });
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var products = this.state.products;
+      var onChange = this.onChange,
+          onCreate = this.onCreate;
+
+      return _react2.default.createElement(
+        _reactRouterDom.HashRouter,
+        null,
+        _react2.default.createElement(
+          'div',
+          null,
+          _react2.default.createElement(_reactRouterDom.Route, { component: _Nav2.default }),
+          _react2.default.createElement(_reactRouterDom.Route, { path: '/', exact: true, component: _Home2.default }),
+          _react2.default.createElement(_reactRouterDom.Route, { path: '/products', exact: true, component: function component() {
+              return _react2.default.createElement(_Products2.default, { products: products, onCreate: onCreate });
+            } }),
+          _react2.default.createElement(_reactRouterDom.Route, { path: '/products/:id', exact: true, component: function component(_ref) {
+              var match = _ref.match;
+              return _react2.default.createElement(_Product2.default, null);
+            } })
+        )
+      );
+    }
+  }]);
+
+  return Main;
+}(_react2.default.Component);
 
 exports.default = Main;
 
@@ -25022,8 +25090,6 @@ var _axios2 = _interopRequireDefault(_axios);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -25040,27 +25106,14 @@ var Products = function (_React$Component) {
     var _this = _possibleConstructorReturn(this, (Products.__proto__ || Object.getPrototypeOf(Products)).call(this));
 
     _this.state = {
-      products: [],
-      product: {},
       inputValue: ''
     };
-    _this.onChange = _this.onChange.bind(_this);
     _this.onAddProduct = _this.onAddProduct.bind(_this);
+    _this.onChange = _this.onChange.bind(_this);
     return _this;
   }
 
   _createClass(Products, [{
-    key: 'componentDidMount',
-    value: function componentDidMount() {
-      var _this2 = this;
-
-      _axios2.default.get('/api/products').then(function (res) {
-        return res.data;
-      }).then(function (products) {
-        return _this2.setState({ products: products });
-      });
-    }
-  }, {
     key: 'onChange',
     value: function onChange(ev) {
       var inputValue = ev.target.value;
@@ -25069,23 +25122,16 @@ var Products = function (_React$Component) {
   }, {
     key: 'onAddProduct',
     value: function onAddProduct(ev) {
-      var _this3 = this;
-
       ev.preventDefault();
-      var _state = this.state,
-          inputValue = _state.inputValue,
-          products = _state.products;
+      var inputValue = this.state.inputValue;
+      var onCreate = this.props.onCreate;
 
-      _axios2.default.post('/api/products', { name: inputValue }).then(function (res) {
-        return res.data;
-      }).then(function (product) {
-        return _this3.setState({ products: [].concat(_toConsumableArray(products), [product]) });
-      });
+      onCreate(inputValue);
     }
   }, {
     key: 'render',
     value: function render() {
-      var products = this.state.products;
+      var products = this.props.products;
       var onChange = this.onChange,
           onAddProduct = this.onAddProduct;
 
@@ -25199,6 +25245,56 @@ var Nav = function Nav(_ref) {
 };
 
 exports.default = Nav;
+
+/***/ }),
+/* 105 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /* eslint-disable */
+
+
+var Product = function (_React$Component) {
+  _inherits(Product, _React$Component);
+
+  function Product() {
+    _classCallCheck(this, Product);
+
+    return _possibleConstructorReturn(this, (Product.__proto__ || Object.getPrototypeOf(Product)).call(this));
+  }
+
+  _createClass(Product, [{
+    key: 'render',
+    value: function render() {
+      console.log(this);
+      // const id = this.props.id.params.id
+      // console.log(id)
+      return _react2.default.createElement('hr', null);
+    }
+  }]);
+
+  return Product;
+}(_react2.default.Component);
+
+exports.default = Product;
 
 /***/ })
 /******/ ]);

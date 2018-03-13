@@ -7,18 +7,10 @@ export default class Products extends React.Component {
   constructor() {
     super()
     this.state = {
-      products: [],
-      product: {},
       inputValue: ''
     }
-    this.onChange = this.onChange.bind(this)
     this.onAddProduct = this.onAddProduct.bind(this)
-  }
-
-  componentDidMount() {
-    axios.get('/api/products')
-      .then(res => res.data)
-      .then(products => this.setState({ products }))
+    this.onChange = this.onChange.bind(this)
   }
 
   onChange(ev) {
@@ -28,15 +20,13 @@ export default class Products extends React.Component {
 
   onAddProduct(ev) {
     ev.preventDefault()
-    const { inputValue, products } = this.state
-    axios.post('/api/products', { name: inputValue })
-      .then(res => res.data)
-      .then(product => this.setState({ products: [...products, product] }))
+    const { inputValue } = this.state
+    const { onCreate } = this.props
+    onCreate(inputValue)
   }
 
-
   render() {
-    const { products } = this.state
+    const { products } = this.props
     const { onChange, onAddProduct } = this
     return (
       <div>
