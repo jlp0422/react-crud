@@ -1,5 +1,6 @@
 /* eslint-disable */
-import React from 'react'
+import React from 'react';
+import { Link } from 'react-router-dom'
 
 export default class Product extends React.Component {
   constructor() {
@@ -51,6 +52,8 @@ export default class Product extends React.Component {
         </form>
         <br />
         <button className="btn btn-danger" onClick={onDelete}>Delete product</button>
+        <br /> <br />
+        <Link to="/products">&laquo; Back to all products</Link>
       </div>
     )
   }
