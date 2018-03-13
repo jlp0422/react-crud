@@ -20398,15 +20398,15 @@ var _axios = __webpack_require__(37);
 
 var _axios2 = _interopRequireDefault(_axios);
 
-var _Nav = __webpack_require__(104);
+var _Nav = __webpack_require__(102);
 
 var _Nav2 = _interopRequireDefault(_Nav);
 
-var _Home = __webpack_require__(102);
+var _Home = __webpack_require__(103);
 
 var _Home2 = _interopRequireDefault(_Home);
 
-var _Products = __webpack_require__(103);
+var _Products = __webpack_require__(104);
 
 var _Products2 = _interopRequireDefault(_Products);
 
@@ -20438,6 +20438,8 @@ var Main = function (_React$Component) {
       product: {}
     };
     _this.onCreate = _this.onCreate.bind(_this);
+    _this.onSelect = _this.onSelect.bind(_this);
+    _this.onUpdate = _this.onUpdate.bind(_this);
     return _this;
   }
 
@@ -20464,11 +20466,39 @@ var Main = function (_React$Component) {
       });
     }
   }, {
+    key: 'onUpdate',
+    value: function onUpdate(product) {
+      var _this4 = this;
+
+      _axios2.default.put('/api/products/' + product.id, { name: product.name }).then(function (res) {
+        return res.data;
+      }).then(function (product) {
+        var products = _this4.state.products.filter(function (p) {
+          return p.id !== product.id;
+        });
+        _this4.setState({ products: [].concat(_toConsumableArray(products), [product]) });
+      }).then(function () {
+        return document.location.hash = '/products';
+      });
+    }
+  }, {
+    key: 'onSelect',
+    value: function onSelect(id) {
+      var product = this.state.products.find(function (p) {
+        return p.id === id;
+      });
+      this.setState({ product: product });
+    }
+  }, {
     key: 'render',
     value: function render() {
-      var products = this.state.products;
+      var _state = this.state,
+          products = _state.products,
+          product = _state.product;
       var onChange = this.onChange,
-          onCreate = this.onCreate;
+          onCreate = this.onCreate,
+          onSelect = this.onSelect,
+          onUpdate = this.onUpdate;
 
       return _react2.default.createElement(
         _reactRouterDom.HashRouter,
@@ -20479,11 +20509,11 @@ var Main = function (_React$Component) {
           _react2.default.createElement(_reactRouterDom.Route, { component: _Nav2.default }),
           _react2.default.createElement(_reactRouterDom.Route, { path: '/', exact: true, component: _Home2.default }),
           _react2.default.createElement(_reactRouterDom.Route, { path: '/products', exact: true, component: function component() {
-              return _react2.default.createElement(_Products2.default, { products: products, onCreate: onCreate });
+              return _react2.default.createElement(_Products2.default, { products: products, onCreate: onCreate, select: onSelect });
             } }),
           _react2.default.createElement(_reactRouterDom.Route, { path: '/products/:id', exact: true, component: function component(_ref) {
               var match = _ref.match;
-              return _react2.default.createElement(_Product2.default, null);
+              return _react2.default.createElement(_Product2.default, { product: product, update: onUpdate });
             } })
         )
       );
@@ -25044,6 +25074,67 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
+var _reactRouterDom = __webpack_require__(16);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Nav = function Nav(_ref) {
+  var location = _ref.location;
+
+  var path = location.pathname;
+  return _react2.default.createElement(
+    'div',
+    null,
+    _react2.default.createElement(
+      'ul',
+      null,
+      _react2.default.createElement(
+        'li',
+        null,
+        path === '/' ? _react2.default.createElement(
+          'span',
+          null,
+          'Home'
+        ) : _react2.default.createElement(
+          _reactRouterDom.Link,
+          { to: '/' },
+          'Home'
+        )
+      ),
+      _react2.default.createElement(
+        'li',
+        null,
+        path === '/products' ? _react2.default.createElement(
+          'span',
+          null,
+          'Products'
+        ) : _react2.default.createElement(
+          _reactRouterDom.Link,
+          { to: '/products' },
+          'Products'
+        )
+      )
+    )
+  );
+};
+
+exports.default = Nav;
+
+/***/ }),
+/* 103 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var Home = function Home() {
@@ -25066,7 +25157,7 @@ var Home = function Home() {
 exports.default = Home;
 
 /***/ }),
-/* 103 */
+/* 104 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -25131,7 +25222,9 @@ var Products = function (_React$Component) {
   }, {
     key: 'render',
     value: function render() {
-      var products = this.props.products;
+      var _props = this.props,
+          products = _props.products,
+          select = _props.select;
       var onChange = this.onChange,
           onAddProduct = this.onAddProduct;
 
@@ -25167,7 +25260,9 @@ var Products = function (_React$Component) {
                 { to: '/products/' + product.id },
                 _react2.default.createElement(
                   'button',
-                  null,
+                  { onClick: function onClick() {
+                      return select(product.id);
+                    } },
                   'Edit product'
                 )
               ),
@@ -25184,67 +25279,6 @@ var Products = function (_React$Component) {
 }(_react2.default.Component);
 
 exports.default = Products;
-
-/***/ }),
-/* 104 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _react = __webpack_require__(0);
-
-var _react2 = _interopRequireDefault(_react);
-
-var _reactRouterDom = __webpack_require__(16);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var Nav = function Nav(_ref) {
-  var location = _ref.location;
-
-  var path = location.pathname;
-  return _react2.default.createElement(
-    'div',
-    null,
-    _react2.default.createElement(
-      'ul',
-      null,
-      _react2.default.createElement(
-        'li',
-        null,
-        path === '/' ? _react2.default.createElement(
-          'span',
-          null,
-          'Home'
-        ) : _react2.default.createElement(
-          _reactRouterDom.Link,
-          { to: '/' },
-          'Home'
-        )
-      ),
-      _react2.default.createElement(
-        'li',
-        null,
-        path === '/products' ? _react2.default.createElement(
-          'span',
-          null,
-          'Products'
-        ) : _react2.default.createElement(
-          _reactRouterDom.Link,
-          { to: '/products' },
-          'Products'
-        )
-      )
-    )
-  );
-};
-
-exports.default = Nav;
 
 /***/ }),
 /* 105 */
@@ -25275,19 +25309,57 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var Product = function (_React$Component) {
   _inherits(Product, _React$Component);
 
-  function Product() {
+  function Product(props) {
     _classCallCheck(this, Product);
 
-    return _possibleConstructorReturn(this, (Product.__proto__ || Object.getPrototypeOf(Product)).call(this));
+    var _this = _possibleConstructorReturn(this, (Product.__proto__ || Object.getPrototypeOf(Product)).call(this, props));
+
+    _this.state = {
+      inputValue: props.product.name
+    };
+    _this.onChange = _this.onChange.bind(_this);
+    _this.onSave = _this.onSave.bind(_this);
+    return _this;
   }
 
   _createClass(Product, [{
+    key: 'onChange',
+    value: function onChange(ev) {
+      var inputValue = ev.target.value;
+      this.setState({ inputValue: inputValue });
+    }
+  }, {
+    key: 'componentWillReceiveProps',
+    value: function componentWillReceiveProps(nextProps) {
+      console.log(nextProps);
+    }
+  }, {
+    key: 'onSave',
+    value: function onSave(ev) {
+      ev.preventDefault();
+      var inputValue = this.state.inputValue;
+      var id = this.props.product.id;
+
+      this.props.update({ id: id, name: inputValue });
+    }
+  }, {
     key: 'render',
     value: function render() {
-      console.log(this);
-      // const id = this.props.id.params.id
-      // console.log(id)
-      return _react2.default.createElement('hr', null);
+      var product = this.props.product;
+      var onChange = this.onChange,
+          onSave = this.onSave;
+      var inputValue = this.state.inputValue;
+
+      return _react2.default.createElement(
+        'form',
+        null,
+        _react2.default.createElement('input', { value: inputValue, onChange: onChange }),
+        _react2.default.createElement(
+          'button',
+          { onClick: onSave },
+          'Save'
+        )
+      );
     }
   }]);
 

@@ -24,6 +24,16 @@ app.post('/api/products', (req, res, next) => {
     .catch(next)
 })
 
+app.put(`/api/products/:id`, (req, res, next) => {
+  Product.findById(req.params.id)
+    .then( product => {
+      Object.assign(product, req.body)
+      return product.save()
+    })
+    .then( product => res.send(product))
+    .catch(next)
+})
+
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`port of call: ${port}`))
 

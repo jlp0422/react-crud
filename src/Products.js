@@ -26,7 +26,7 @@ export default class Products extends React.Component {
   }
 
   render() {
-    const { products } = this.props
+    const { products, select } = this.props
     const { onChange, onAddProduct } = this
     return (
       <div>
@@ -41,7 +41,7 @@ export default class Products extends React.Component {
             products.map( product => (
                 <li key={ product.id }>
                   { product.name }&nbsp;&nbsp;
-                  <Link to={`/products/${product.id}`}><button>Edit product</button></Link>
+                  <Link to={`/products/${product.id}`}><button onClick={() => select(product.id)}>Edit product</button></Link>
                   <br /><br />
                 </li>
             ))

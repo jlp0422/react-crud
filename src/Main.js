@@ -16,6 +16,8 @@ export default class Main extends React.Component {
       product: {},
     }
     this.onCreate = this.onCreate.bind(this)
+    this.onSelect = this.onSelect.bind(this)
+    this.onUpdate = this.onUpdate.bind(this)
   }
 
   componentDidMount() {
@@ -30,16 +32,31 @@ export default class Main extends React.Component {
       .then(product => this.setState({ products: [...this.state.products, product] }))
   }
 
+  onUpdate(product) {
+    axios.put(`/api/products/${product.id}`, {name: product.name })
+      .then( res => res.data)
+      .then( product => {
+        const products = this.state.products.filter( p => p.id !== product.id)
+        this.setState({ products: [ ...products , product ]})
+      })
+      .then(() => document.location.hash = '/products')
+  }
+
+  onSelect(id) {
+    const product = this.state.products.find( p => p.id === id)
+    this.setState({ product })
+  }
+
   render() {
-    const { products } = this.state
-    const { onChange, onCreate } = this
+    const { products, product } = this.state
+    const { onChange, onCreate, onSelect, onUpdate } = this
     return (
       <Router>
         <div>
           <Route component={Nav} />
           <Route path='/' exact component={Home} />
-          <Route path='/products' exact component={() => (<Products products={ products } onCreate={ onCreate } />)} />
-          <Route path='/products/:id' exact component={({ match }) => (<Product />)} />
+          <Route path='/products' exact component={() => (<Products products={ products } onCreate={ onCreate } select={ onSelect } />)} />
+          <Route path='/products/:id' exact component={({ match }) => (<Product product={ product } update={ onUpdate } />)} />
         </div>
       </Router>
     )
