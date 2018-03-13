@@ -36,7 +36,6 @@ export default class Product extends React.Component {
 
   onDelete(ev) {
     ev.preventDefault()
-    console.log(this.props)
     const { id } = this.props
     this.props.delete(id*1)
   }

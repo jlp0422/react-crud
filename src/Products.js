@@ -35,6 +35,7 @@ export default class Products extends React.Component {
           <input onChange={ onChange }/>
           <button>Add Product</button>
         </form>
+        <br />
         <ul>
           {
             products &&

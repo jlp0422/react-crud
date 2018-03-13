@@ -25110,33 +25110,33 @@ var Nav = function Nav(_ref) {
   var path = location.pathname;
   return _react2.default.createElement(
     'div',
-    null,
+    { style: { marginBottom: 20, marginTop: 10 } },
     _react2.default.createElement(
       'ul',
-      null,
+      { className: 'nav nav-tabs' },
       _react2.default.createElement(
         'li',
-        null,
+        { className: 'nav-item' },
         path === '/' ? _react2.default.createElement(
           'span',
-          null,
+          { className: 'nav-link active' },
           'Home'
         ) : _react2.default.createElement(
           _reactRouterDom.Link,
-          { to: '/' },
+          { to: '/', className: 'nav-link' },
           'Home'
         )
       ),
       _react2.default.createElement(
         'li',
-        null,
+        { className: 'nav-item' },
         path === '/products' ? _react2.default.createElement(
           'span',
-          null,
+          { className: 'nav-link active' },
           'Products'
         ) : _react2.default.createElement(
           _reactRouterDom.Link,
-          { to: '/products' },
+          { to: '/products', className: 'nav-link' },
           'Products'
         )
       )
@@ -25272,6 +25272,7 @@ var Products = function (_React$Component) {
             'Add Product'
           )
         ),
+        _react2.default.createElement('br', null),
         _react2.default.createElement(
           'ul',
           null,
@@ -25386,7 +25387,6 @@ var Product = function (_React$Component) {
     key: 'onDelete',
     value: function onDelete(ev) {
       ev.preventDefault();
-      console.log(this.props);
       var id = this.props.id;
 
       this.props.delete(id * 1);

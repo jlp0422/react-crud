@@ -4,24 +4,24 @@ import { Link } from 'react-router-dom'
 const Nav = ({ location }) => {
   const path = location.pathname
   return (
-    <div>
-      <ul>
-        <li>
+    <div style={{ marginBottom: 20, marginTop: 10 }}>
+      <ul className="nav nav-tabs">
+        <li className="nav-item">
           {
             path === '/' ? (
-              <span>Home</span>
+              <span className="nav-link active">Home</span>
             ) : (
-              <Link to="/">Home</Link>
+              <Link to="/" className="nav-link">Home</Link>
             )
           }
         </li>
 
-        <li>
+        <li className="nav-item">
           {
             path === '/products' ? (
-              <span>Products</span>
+              <span className="nav-link active">Products</span>
             ) : (
-                <Link to="/products">Products</Link>
+                <Link to="/products" className="nav-link">Products</Link>
               )
           }
         </li>
