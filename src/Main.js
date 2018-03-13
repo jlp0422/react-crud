@@ -18,6 +18,7 @@ export default class Main extends React.Component {
     this.onCreate = this.onCreate.bind(this)
     this.onSelect = this.onSelect.bind(this)
     this.onUpdate = this.onUpdate.bind(this)
+    this.onDelete = this.onDelete.bind(this)
   }
 
   componentDidMount() {
@@ -47,16 +48,27 @@ export default class Main extends React.Component {
     this.setState({ product })
   }
 
+  onDelete(id) {
+    const product = this.state.products.find( p => p.id === id)
+    axios.delete(`/api/products/${product.id}`, { id })
+    .then( res => res.data)
+    .then( id => {
+      const products = this.state.products.filter( p => p.id !== id)
+      this.setState({ products })
+    })
+    .then(() => document.location.hash = '/products')
+  }
+
   render() {
     const { products, product } = this.state
-    const { onChange, onCreate, onSelect, onUpdate } = this
+    const { onChange, onCreate, onSelect, onUpdate, onDelete } = this
     return (
       <Router>
         <div>
           <Route component={Nav} />
           <Route path='/' exact component={Home} />
           <Route path='/products' exact component={() => (<Products products={ products } onCreate={ onCreate } select={ onSelect } />)} />
-          <Route path='/products/:id' exact component={({ match }) => (<Product product={ product } update={ onUpdate } />)} />
+          <Route path='/products/:id' exact component={({ match }) => (<Product product={ product } update={ onUpdate } delete={ onDelete } id={ match.params.id }/>)} />
         </div>
       </Router>
     )

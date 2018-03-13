@@ -34,6 +34,13 @@ app.put(`/api/products/:id`, (req, res, next) => {
     .catch(next)
 })
 
+app.delete(`/api/products/:id`, (req, res, next) => {
+  Product.findById(req.params.id)
+    .then( product => product.destroy())
+    .then( product => res.send(req.params.id))
+    .catch(next)
+})
+
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`port of call: ${port}`))
 

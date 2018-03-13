@@ -20440,6 +20440,7 @@ var Main = function (_React$Component) {
     _this.onCreate = _this.onCreate.bind(_this);
     _this.onSelect = _this.onSelect.bind(_this);
     _this.onUpdate = _this.onUpdate.bind(_this);
+    _this.onDelete = _this.onDelete.bind(_this);
     return _this;
   }
 
@@ -20490,6 +20491,25 @@ var Main = function (_React$Component) {
       this.setState({ product: product });
     }
   }, {
+    key: 'onDelete',
+    value: function onDelete(id) {
+      var _this5 = this;
+
+      var product = this.state.products.find(function (p) {
+        return p.id === id;
+      });
+      _axios2.default.delete('/api/products/' + product.id, { id: id }).then(function (res) {
+        return res.data;
+      }).then(function (id) {
+        var products = _this5.state.products.filter(function (p) {
+          return p.id !== id;
+        });
+        _this5.setState({ products: products });
+      }).then(function () {
+        return document.location.hash = '/products';
+      });
+    }
+  }, {
     key: 'render',
     value: function render() {
       var _state = this.state,
@@ -20498,7 +20518,8 @@ var Main = function (_React$Component) {
       var onChange = this.onChange,
           onCreate = this.onCreate,
           onSelect = this.onSelect,
-          onUpdate = this.onUpdate;
+          onUpdate = this.onUpdate,
+          onDelete = this.onDelete;
 
       return _react2.default.createElement(
         _reactRouterDom.HashRouter,
@@ -20513,7 +20534,7 @@ var Main = function (_React$Component) {
             } }),
           _react2.default.createElement(_reactRouterDom.Route, { path: '/products/:id', exact: true, component: function component(_ref) {
               var match = _ref.match;
-              return _react2.default.createElement(_Product2.default, { product: product, update: onUpdate });
+              return _react2.default.createElement(_Product2.default, { product: product, update: onUpdate, 'delete': onDelete, id: match.params.id });
             } })
         )
       );
@@ -25315,49 +25336,77 @@ var Product = function (_React$Component) {
     var _this = _possibleConstructorReturn(this, (Product.__proto__ || Object.getPrototypeOf(Product)).call(this, props));
 
     _this.state = {
-      inputValue: props.product.name
+      inputValue: props.product.name,
+      product: {}
     };
     _this.onChange = _this.onChange.bind(_this);
     _this.onSave = _this.onSave.bind(_this);
+    _this.onDelete = _this.onDelete.bind(_this);
     return _this;
   }
 
   _createClass(Product, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      console.log('mounted');
+    }
+  }, {
+    key: 'componentWillReceiveProps',
+    value: function componentWillReceiveProps(nextProps) {
+      console.log('next');
+    }
+  }, {
     key: 'onChange',
     value: function onChange(ev) {
       var inputValue = ev.target.value;
       this.setState({ inputValue: inputValue });
     }
   }, {
-    key: 'componentWillReceiveProps',
-    value: function componentWillReceiveProps(nextProps) {
-      console.log(nextProps);
-    }
-  }, {
     key: 'onSave',
     value: function onSave(ev) {
       ev.preventDefault();
       var inputValue = this.state.inputValue;
-      var id = this.props.product.id;
+      var id = this.props.id;
 
       this.props.update({ id: id, name: inputValue });
+    }
+  }, {
+    key: 'onDelete',
+    value: function onDelete(ev) {
+      ev.preventDefault();
+      console.log(this.props);
+      var id = this.props.id;
+
+      this.props.delete(id * 1);
     }
   }, {
     key: 'render',
     value: function render() {
       var product = this.props.product;
       var onChange = this.onChange,
-          onSave = this.onSave;
+          onSave = this.onSave,
+          onDelete = this.onDelete;
       var inputValue = this.state.inputValue;
 
       return _react2.default.createElement(
-        'form',
+        'div',
         null,
-        _react2.default.createElement('input', { value: inputValue, onChange: onChange }),
+        _react2.default.createElement(
+          'form',
+          null,
+          _react2.default.createElement('input', { value: inputValue, onChange: onChange }),
+          _react2.default.createElement(
+            'button',
+            { onClick: onSave },
+            'Save'
+          )
+        ),
+        _react2.default.createElement('br', null),
+        _react2.default.createElement('br', null),
         _react2.default.createElement(
           'button',
-          { onClick: onSave },
-          'Save'
+          { onClick: onDelete },
+          'Delete product'
         )
       );
     }
