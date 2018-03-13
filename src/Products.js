@@ -38,7 +38,7 @@ export default class Products extends React.Component {
     const { products, select } = this.props
     const { onChange, onAddProduct, onAddRandom } = this
     return (
-      <div>
+      <div style={{ paddingBottom: 40}}>
         <h4>Create Product</h4>
         <form onSubmit={ onAddProduct } >
           <input className="form-control" onChange={ onChange } style={{ marginBottom: 10 }}/>
