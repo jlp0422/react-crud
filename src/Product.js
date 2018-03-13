@@ -46,12 +46,11 @@ export default class Product extends React.Component {
     return (
       <div>
         <form>
-          <input value={ name } onChange={ onChange } />
-          <button onClick={onSave}>Save</button>
+          <input className="form-control" value={ name } onChange={ onChange } style={{ marginBottom: 10 }} />
+          <button className="btn btn-success" onClick={onSave}>Save</button>
         </form>
         <br />
-        <br />
-        <button onClick={onDelete}>Delete product</button>
+        <button className="btn btn-danger" onClick={onDelete}>Delete product</button>
       </div>
     )
   }
